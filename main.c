@@ -1,12 +1,24 @@
 /*
  Created by Harbinger Systems Pvt. Ltd on 16/07/15.
  
- Timeline and Twillio example gives you an idea of,
- how the Timeline API works in order to push pins to pebble.
+ Timeline and Twilio example gives you an idea of,
+ how the Timeline push pins to timeline using pebble
+ timeline API.
  
- Also this example shows you how to make twillio call
+ Below are the pins which will get push to timeline.
+ 1) [Sports Pin] - Football Match
+ 2) [Weather Pin] - Nice Day
+ 3) [Movie Pin] - Movie with Alice
+ 4) [Meeting]
+ 
+ Also this example shows you how to make twilio call
  using pebble app.
+ 
+ You can test twilio call using [Movie Pin] - Movie with Alice
+ >> Press select button and choose any answer and to test twilio call.
+ 
 */
+
 #include <pebble.h>
 
 #define READY_KEY 1 
@@ -15,6 +27,9 @@
   
 static Window *s_main_window;
 static TextLayer *s_text_layer;
+
+static BitmapLayer *s_layer_home_logo;
+static GBitmap *s_icon_logo;
 
 void send_app_msg(int key,int value)
 {
@@ -97,7 +112,6 @@ static void outbox_sent_callback(DictionaryIterator *iterator, void *context)
     APP_LOG(APP_LOG_LEVEL_INFO, "C: Outbox send success!");
 }
 
-
 /* ----------------------------------- Action Button Handler ----------------------------------- */
 void select_btn_click_handler(ClickRecognizerRef recognizer , void *context)
 {
@@ -115,13 +129,23 @@ static void window_load(Window *window) {
   //We will add the creation of the Window's elements here!
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
-
-  s_text_layer = text_layer_create(GRect(15, 28, 114, 112));
+  
+   //-- add bitmap layer-->>
+  s_icon_logo = gbitmap_create_with_resource(RESOURCE_ID_ICON_HARBINGER_LOGO);
+  GRect bitmap_bounds = gbitmap_get_bounds(s_icon_logo);
+    
+  s_layer_home_logo = bitmap_layer_create(GRect((bounds.size.w / 2) - (bitmap_bounds.size.w / 2), 5, bitmap_bounds.size.w, bitmap_bounds.size.h));
+  bitmap_layer_set_bitmap(s_layer_home_logo, s_icon_logo);
+  bitmap_layer_set_compositing_mode(s_layer_home_logo, GCompOpSet);
+  layer_add_child(window_layer, bitmap_layer_get_layer(s_layer_home_logo));
+   
+  //-- add text later -->>
+  s_text_layer = text_layer_create(GRect(0, (bitmap_bounds.origin.y + bitmap_bounds.size.h) + 5, bounds.size.w, bounds.size.h - ((bitmap_bounds.origin.y + bitmap_bounds.size.h))));
   text_layer_set_text_alignment(s_text_layer, GTextAlignmentCenter);
   text_layer_set_overflow_mode(s_text_layer, GTextOverflowModeWordWrap);
   text_layer_set_font(s_text_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD));
   text_layer_set_text_color(s_text_layer, GColorCobaltBlue);
-  text_layer_set_text(s_text_layer, "Press Select Button and check your timeline after a few seconds to see the Pins!");
+  text_layer_set_text(s_text_layer, "Press select button and check your timeline after a few seconds to see the Pins!");
   layer_add_child(window_layer, text_layer_get_layer(s_text_layer));
 }
 
@@ -133,7 +157,7 @@ static void window_unload(Window *window) {
 static void init() {
   //Initialize the app elements here!
   s_main_window = window_create();
-  window_set_background_color(s_main_window, GColorCobaltBlue);
+  window_set_background_color(s_main_window, GColorClear);
   window_set_window_handlers(s_main_window, (WindowHandlers) {
     .load = window_load,
     .unload = window_unload,
@@ -154,6 +178,8 @@ static void init() {
 static void deinit() {
   //De-initialize elements here to save memory!
   window_destroy(s_main_window);
+  bitmap_layer_destroy(s_layer_home_logo);
+  text_layer_destroy(s_text_layer);
 }
 
 int main() {
