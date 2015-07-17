@@ -1,35 +1,27 @@
 /*
-  Important Note : In order to Make Twillio call,
-  you need to add the mobile number in below funtion:
-  
-  Funtion Name : function make_twilio_call(movie_reply)
-  
-  Also you need to register yourself with twillio to get the key
-  in order to test the twillio demo
+  Important Note : In order to test twilio call add your phon enumber 
+  to the below varibale ex : mobile = "+919898989898";
 */
+
+var mobile = "+919898989898"; // Please hard code your number with country code
 
 /* --------------- Ready Event Listener --------------- */
 Pebble.addEventListener('ready', function() {
-  console.log('PebbleKit JS ready!');
+  console.log('JS: PebbleKit JS ready!');
   
   var dict = {
     'READY_KEY':'READY'
   };
   
-  var transactionId = Pebble.sendAppMessage(dict,
-    function(e) {
-      console.log('JS: Successfully delivered READY message with transactionId='
-      + e.data.transactionId);
+  var transactionId = Pebble.sendAppMessage(dict, function(e) {
+      console.log('JS: Successfully delivered READY message with transactionId='+ e.data.transactionId);
     },
     function(e) {
-     console.log('JS: Unable to deliver READY message with transactionId='
-      + e.data.transactionId
-      + ' Error is: ' + e.error.message);
+     console.log('JS: Unable to deliver READY message with transactionId='+ e.data.transactionId+ ' Error is: ' + e.error.message);
     }
   );
   
 });
-
 
 
 /* ---------- Listen for incoming msgs from Pebble C ---------------- */
@@ -63,12 +55,12 @@ var xhrRequest = function (url, type, callback, data) {
 
 function make_twilio_call(movie_reply)
 {
-  var mobile = "YOUR MOBILE NUMBER"; // Please hard code your number with country code
   var encoded_mobile=encodeURIComponent(mobile);
-    var url = 'http://54.169.137.148/test-hospital-rest-api/index.php/Hospital/demo_twilio_call/mobile/'+encoded_mobile+'/movie_reply/'+movie_reply+'/format/json/';
-    xhrRequest(url, 'GET', function(response) 
+  
+  var url='http://mytwiliocall.byethost7.com/twilio-call/twilio_demo.php?mobile='+encoded_mobile+'&movie_reply='+movie_reply;  
+  xhrRequest(url, 'GET', function(response) 
               {
-                console.log('Response of making call=>' + JSON.stringify(response));
+                console.log('JS: Placed a Twilio call');
                });
 }
 
