@@ -4,8 +4,8 @@
   
   Funtion Name : function make_twilio_call(movie_reply)
   
-  Also you need to register yourself with twillio to het the key
-  in order to text the twillio demo
+  Also you need to register yourself with twillio to get the key
+  in order to test the twillio demo
 */
 
 /* --------------- Ready Event Listener --------------- */
