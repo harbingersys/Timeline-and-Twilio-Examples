@@ -1,4 +1,4 @@
-# Timeline-and-Twillio-Examples
+# Timeline-and-Twilio-Examples
 This repository contains pebble sample example for Timeline and Twilio call. Sample pins are pushed to timeline . 
 Ex : 
 [Weather Pins] ,
